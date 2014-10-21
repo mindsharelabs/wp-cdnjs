@@ -1,0 +1,38 @@
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+
+
+
+table#cdnjs-selected  .fa-arrows-v{
+cursor:move;
+text-align: center;
+padding: 10px;
+}
+table#cdnjs-selected th {
+ padding: 8px 10px;
+
+}
+.form-table td {
+	vertical-align: top;
+}
+
+.select2-results .select2-disabled {
+    background:#888;
+    color:#fff;
+}
+
+.select2-results .select2-disabled .select2-result-label {
+    cursor: default;
+}
+
+/*.select2-result-selectable {
+    cursor:pointer;
+}*/

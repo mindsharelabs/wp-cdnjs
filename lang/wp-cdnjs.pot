@@ -1,0 +1,154 @@
+# Copyright (C) 2014 WP cdnjs
+# This file is distributed under the same license as the WP cdnjs package.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP cdnjs 0.1\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-cdnjs\n"
+"POT-Creation-Date: 2014-08-08 22:08:04+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: lib/settings-framework/settings-framework.php:56
+msgid "Settings file could not be found."
+msgstr ""
+
+#: lib/settings-framework/settings-framework.php:70
+msgid "Settings framework must be an array"
+msgstr ""
+
+#: lib/settings-framework/settings-framework.php:334
+msgid "All options have been removed from the database."
+msgstr ""
+
+#: lib/settings-framework/settings-framework.php:345
+msgid "To complete the uninstall <a href=\"%1$s\"\">deactivate %2$s.</a>"
+msgstr ""
+
+#: lib/settings-framework/settings-framework.php:357
+msgid "All options have been restored to their default values."
+msgstr ""
+
+#: lib/settings-framework/settings-framework.php:371
+msgid "Save Changes"
+msgstr ""
+
+#: lib/settings-framework/settings-framework.php:374
+msgid "Restore Defaults"
+msgstr ""
+
+#: lib/settings-framework/settings-framework.php:378
+msgid "Uninstall"
+msgstr ""
+
+#: lib/settings-framework/settings-framework.php:387
+msgid ""
+"Do you wish to <strong>completely reset</strong> the default options for"
+msgstr ""
+
+#: lib/settings-framework/settings-framework.php:388
+#: lib/settings-framework/settings-framework.php:397
+msgid "Cancel"
+msgstr ""
+
+#: lib/settings-framework/settings-framework.php:396
+msgid "Do you wish to <strong>completely uninstall</strong>"
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:11 wp-cdnjs.php:351
+msgid "Settings"
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:17
+msgid "Enable scripts"
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:18
+msgid "Enqueue scripts for output on your site"
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:25
+msgid "Find cdnjs Libraries"
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:26
+msgid "Search for CSS and JavaScript libraries to include."
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:45
+msgid "Enqueued cdnjs Libraries"
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:51
+msgid "Plugin Name"
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:52
+msgid "Assets"
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:53
+msgid "Add Assests"
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:54
+msgid "Location"
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:55
+msgid "Enable"
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:56 views/wp-cdnjs-settings.php:97
+#: wp-cdnjs.php:372
+msgid "Remove"
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:64 wp-cdnjs.php:374
+msgid "Version"
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:71 wp-cdnjs.php:370 wp-cdnjs.php:371
+msgid "Included Assets"
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:90 wp-cdnjs.php:368
+msgid "Footer"
+msgstr ""
+
+#: views/wp-cdnjs-settings.php:91 wp-cdnjs.php:369
+msgid "Header"
+msgstr ""
+
+#: wp-cdnjs.php:367
+msgid "Add Assets"
+msgstr ""
+
+#: wp-cdnjs.php:373
+msgid "Search cdnjs Libraries"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "WP cdnjs"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://wordpress.org/plugins/wp-cdnjs/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Effortlessly include any CSS or JavaScript Library hosted at cdnjs.com on "
+"your WordPress site."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Mindshare Labs / ANAGR.AM"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://mindsharelabs.com/"
+msgstr ""
