@@ -111,6 +111,13 @@ if(!class_exists('WP_CDNJS')) : /**
 		 */
 		private $select2_version = '3.5.2';
 
+        /**
+		 * Version of Font Awesome to use for the admin screens.
+		 *
+		 * @var string
+		 */
+		private $fa_version = '4.2.0';
+
 		/**
 		 * Initialize the plugin. Set up actions / filters.
 		 *
@@ -254,8 +261,8 @@ if(!class_exists('WP_CDNJS')) : /**
 			<?php
 
 			// Get settings
-			//$settings = $this->get_settings(WP_CDNJS_OPTIONS);
-			//echo '<pre>'.var_export($settings, TRUE).'</pre>';
+			$settings = $this->get_settings(WP_CDNJS_OPTIONS);
+			echo '<pre>'.var_export($settings, TRUE).'</pre>';
 		}
 
 		/**
@@ -525,7 +532,7 @@ if(!class_exists('WP_CDNJS')) : /**
 		public function register_admin_styles() {
 			wp_enqueue_style('cdnjs-select2', $this->cdnjs_uri.'select2/'.$this->select2_version.'/select2.min.css');
 			wp_enqueue_style('cdnjs-select2-bootstrap', $this->cdnjs_uri.'select2/'.$this->select2_version.'/select2-bootstrap.min.css');
-			wp_enqueue_style('cdnjs-font-awesome', $this->cdnjs_uri.'font-awesome/4.2.0/css/font-awesome.min.css');
+			wp_enqueue_style('cdnjs-font-awesome', $this->cdnjs_uri.'font-awesome/'.$this->fa_version.'/css/font-awesome.min.css');
 			wp_enqueue_style('cdnjs-styles', WP_CDNJS_DIR_URL.'/assets/css/cdnjs-styles.min.css');
 		}
 
