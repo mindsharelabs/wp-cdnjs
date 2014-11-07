@@ -1,7 +1,7 @@
 <?php
 
 
-if(!class_exists('wp_cdnjs_settings')) :
+if(!class_exists('wp_cdnjs_settings')) {
 	/**
 	 * wp_cdnjs_settings class
 	 */
@@ -324,8 +324,6 @@ if(!class_exists('wp_cdnjs_settings')) :
 		 */
 		public function settings() {
 
-			// @todo finish adding i8n functions for text
-
 			if(isset($_POST['wp_cdnjs_uninstall'])) {
 				check_admin_referer('wp-cdnjs-uninstall', 'wp-cdnjs-uninstall-nonce');
 				delete_option($this->option_group);
@@ -402,4 +400,5 @@ if(!class_exists('wp_cdnjs_settings')) :
 			do_action('wp_cdnjs_after_settings');
 		}
 	}
-endif;
+}
+

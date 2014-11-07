@@ -3,7 +3,7 @@
 Plugin Name: WP cdnjs
 Plugin URI: http://wordpress.org/plugins/wp-cdnjs/
 Description: Effortlessly include any CSS or JavaScript Library hosted at cdnjs.com on your WordPress site.
-Version: 0.1.3
+Version: 0.1.4 DEV
 Author: Mindshare Labs / ANAGR.AM
 Author URI: https://mindsharelabs.com/
 License: GNU General Public License
@@ -42,11 +42,11 @@ if(!function_exists('add_action')) {
 }
 
 if(!defined('WP_CDNJS_VERSION')) {
-	define('WP_CDNJS_VERSION', '0.1');
+	define('WP_CDNJS_VERSION', '0.1.4');
 }
 
 if(!defined('WP_CDNJS_MIN_WP_VERSION')) {
-	define('WP_CDNJS_MIN_WP_VERSION', '3.9');
+	define('WP_CDNJS_MIN_WP_VERSION', '4.0');
 }
 
 if(!defined('WP_CDNJS_PLUGIN_NAME')) {
@@ -98,18 +98,18 @@ if(!class_exists('WP_CDNJS')) : /**
 		private $cdnjs_uri = '//cdnjs.cloudflare.com/ajax/libs/';
 
 		/**
-		 * Version of Select2 to use for the admin screens.
+		 * CDNJS API base URL
 		 *
 		 * @var string
 		 */
-		private $select2_version = '3.4.5';
+		private $cdnjs_api_uri = '//api.cdnjs.com/';
 
 		/**
 		 * Version of Select2 to use for the admin screens.
 		 *
 		 * @var string
 		 */
-		private $bootstrap_version = '3.1.1';
+		private $select2_version = '3.5.2';
 
 		/**
 		 * Initialize the plugin. Set up actions / filters.
@@ -128,7 +128,7 @@ if(!class_exists('WP_CDNJS')) : /**
 			add_filter('plugin_action_links', array($this, 'plugin_action_links'), 10, 2);
 
 			// Activation hooks
-			//register_activation_hook(__FILE__, array($this, 'activate'));
+			register_activation_hook(__FILE__, array($this, 'activate'));
 			//register_deactivation_hook(__FILE__, array($this, 'deactivate'));
 
 			// Uninstall hook
@@ -174,6 +174,8 @@ if(!class_exists('WP_CDNJS')) : /**
 		}
 
 		/**
+		 * Returns the plugin URL
+		 *
 		 * @return string
 		 */
 		public function get_plugin_url() {
@@ -197,8 +199,18 @@ if(!class_exists('WP_CDNJS')) : /**
 
 		/**
 		 * Activation
+		 *
+		 * Adds default option to enable scripts if settings are not present in DB
+		 *
 		 */
 		public function activate() {
+
+			$settings = $this->get_settings(WP_CDNJS_OPTIONS);
+			if(!$settings) {
+				$settings = update_option(WP_CDNJS_OPTIONS, array(
+					'cdnjs_settings_enable_scripts' => TRUE
+				));
+			}
 		}
 
 		/**
@@ -218,7 +230,6 @@ if(!class_exists('WP_CDNJS')) : /**
 		 *
 		 */
 		public function admin_menu() {
-
 			// Settings page
 			add_submenu_page('options-general.php', __(WP_CDNJS_PLUGIN_NAME.' Settings', 'wp-cdnjs'), __(WP_CDNJS_PLUGIN_NAME.' Settings', 'wp-cdnjs'), 'manage_options', WP_CDNJS_PLUGIN_SLUG, array(
 				$this,
@@ -231,7 +242,6 @@ if(!class_exists('WP_CDNJS')) : /**
 		 *
 		 */
 		public function settings_page() {
-
 			?>
 			<div class="wrap">
 				<div id="icon-options-general" class="icon32"></div>
@@ -245,8 +255,7 @@ if(!class_exists('WP_CDNJS')) : /**
 
 			// Get settings
 			//$settings = $this->get_settings(WP_CDNJS_OPTIONS);
-			//echo '<pre>'.print_r($settings, TRUE).'</pre>';
-
+			//echo '<pre>'.var_export($settings, TRUE).'</pre>';
 		}
 
 		/**
@@ -305,6 +314,76 @@ if(!class_exists('WP_CDNJS')) : /**
 		}
 
 		/**
+		 * Programmatically inserts a setting into the options array.
+		 *
+		 * @param $option_group
+		 * @param $section_id
+		 * @param $field_id
+		 * @param $value
+		 *
+		 * @return bool
+		 */
+		public function apply_setting($option_group, $section_id, $field_id, $value) {
+			$options = get_option($option_group);
+			if($options) {
+				$options[$option_group.'_'.$section_id.'_'.$field_id] = $value;
+				update_option($option_group, $options);
+			}
+
+			return FALSE;
+		}
+
+		/**
+		 * Simple API function for adding CDN scripts via theme or plugin files.
+		 *
+		 * @param $scripts array An Array of script to enqueue. Once added the script will show up on the WP cdnjs admin screen.
+		 * @param $scripts array [string]slug  CDN slug
+		 * @param $scripts array [array]details  Array of settings for this library
+		 * @param $details [string]name Name of the library to include.
+		 * @param $details [string]version Library version.
+		 * @param $details [array]assets Array of additional assets to include.
+		 * @param $details [bool]location Boolean to include script in header or footer.
+		 * @param $details [bool]enabled Should the script be enabled or disabled.
+		 *
+		 * @return bool
+		 */
+		public function register_script($scripts) {
+			$registered = $this->get_setting(WP_CDNJS_OPTIONS, 'settings', 'scripts', $scripts);
+			if(!is_array($registered)) {
+				$registered = array();
+			}
+			if(is_array($scripts)) {
+				$scripts = array_merge($scripts, $registered);
+				$this->apply_setting(WP_CDNJS_OPTIONS, 'settings', 'scripts', $scripts);
+			}
+
+			return FALSE;
+		}
+
+		/**
+		 *
+		 * Checks the options array to see if a specific CDN library is already enqueued. Does NOT check the enabled/disabled state, just checks to see if the user has a library added on the admin screen.
+		 *
+		 * @param string $script_slug Slug of the library to check.
+		 *
+		 * @return bool
+		 */
+		public function is_script_registered($script_slug) {
+			$script_slug = sanitize_key($script_slug);
+			if(isset($script_slug)) {
+				$search = $this->get_setting(WP_CDNJS_OPTIONS, 'settings', 'scripts');
+
+				if(is_array($search) && array_key_exists($script_slug, $search)) {
+					return TRUE;
+				} else {
+					return FALSE;
+				}
+			}
+
+			return FALSE;
+		}
+
+		/**
 		 * Delete all the saved settings from a settings-framework file/option group
 		 *
 		 * @param $option_group string option group id
@@ -333,9 +412,75 @@ if(!class_exists('WP_CDNJS')) : /**
 			return FALSE;
 		}
 
+		public function lookup_cdnjs_library($search) {
+
+			$transient_key = WP_CDNJS_PLUGIN_SLUG.'_'.sanitize_key($search);
+
+			// Check for transient, if none, grab remote HTML file
+			if(FALSE === ($html = get_transient($transient_key))) {
+
+				// Get remote HTML file
+				//$protocol = is_SSL() ? 'https://' : 'http://';
+				$response = wp_remote_get('https:'.$this->cdnjs_api_uri.'libraries?search='.$search.'&fields=version,filename,description,assets');
+
+				// Check for error
+				if(is_wp_error($response)) {
+					//var_export($response);
+					return FALSE;
+				}
+
+				// Parse remote HTML file
+				$data = wp_remote_retrieve_body($response);
+
+				// Check for error
+				if(is_wp_error($data)) {
+					return FALSE;
+				} else {
+					$data = json_decode($data, TRUE);
+
+					// just grab the results sub array
+					$data = $data['results'][0];
+
+					// modify the assets array to only include the latest version files
+					if(array_key_exists('assets', $data)) {
+						$data['assets'] = $data['assets'][0]['files'];
+
+						// Loop through assets to see if .min version is available and use that
+						$final_assets = array();
+						foreach($data['assets'] as $key => $asset) {
+							// more cleanup
+							unset($data['assets'][$key]['size']);
+							//$data['assets'][$key]['name'] = $data['assets'][$key];
+
+							if(strpos($asset['name'], '.min.') !== FALSE) {
+								$final_assets[] = $asset['name'];
+							}
+						}
+						if(!empty($final_assets)) {
+							$data['assets'] = $final_assets;
+						}
+						$data['location'] = 0;
+						$data['enabled'] = 1;
+					}
+
+					// remove extra data from the array
+					unset($data['description']);
+					unset($data['latest']);
+					unset($data['filename']);
+				}
+
+				set_transient($transient_key, $data, apply_filters('wp_cdnjs_update_interval', 7 * 24 * HOUR_IN_SECONDS));
+			}
+
+			// wrap the library data in a new array with the slug as the index
+			$data = array(sanitize_key($data['name']) => $data);
+
+			return $data;
+		}
+
 		/**
 		 *
-		 * Add a settings link to plugins page
+		 * Add a settings link to plugins page.
 		 *
 		 * @param $links
 		 * @param $file
@@ -355,7 +500,6 @@ if(!class_exists('WP_CDNJS')) : /**
 		 * Enqueue and register JavaScript
 		 */
 		public function register_admin_scripts() {
-			// @todo make function for enqueueing CDNJS stuff and use that here instead
 			wp_enqueue_script('cdnjs-select2', $this->cdnjs_uri.'select2/'.$this->select2_version.'/select2.min.js', array('jquery'));
 			wp_enqueue_script('jquery-ui-sortable');
 			//wp_enqueue_script('jquery-ui-core');
@@ -379,11 +523,10 @@ if(!class_exists('WP_CDNJS')) : /**
 		 * Enqueue and register CSS
 		 */
 		public function register_admin_styles() {
-			// @todo make function for enqueueing CDNJS stuff and use that here instead
 			wp_enqueue_style('cdnjs-select2', $this->cdnjs_uri.'select2/'.$this->select2_version.'/select2.min.css');
-			wp_enqueue_style('cdnjs-select2-bootstrap', $this->cdnjs_uri.'select2/'.$this->select2_version.'/select2-bootstrap.css'); //@todo add min
-			wp_enqueue_style('cdnjs-font-awesome', '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css');
-			wp_enqueue_style('cdnjs-styles', WP_CDNJS_DIR_URL.'/assets/css/cdnjs-styles.css');
+			wp_enqueue_style('cdnjs-select2-bootstrap', $this->cdnjs_uri.'select2/'.$this->select2_version.'/select2-bootstrap.min.css');
+			wp_enqueue_style('cdnjs-font-awesome', $this->cdnjs_uri.'font-awesome/4.2.0/css/font-awesome.min.css');
+			wp_enqueue_style('cdnjs-styles', WP_CDNJS_DIR_URL.'/assets/css/cdnjs-styles.min.css');
 		}
 
 		/**
@@ -391,9 +534,6 @@ if(!class_exists('WP_CDNJS')) : /**
 		 *
 		 */
 		public function cdnjs_scripts() {
-
-			//			var_dump($this->get_setting(WP_CDNJS_OPTIONS, 'settings', 'scripts'));
-			//			die;
 
 			$enabled = $this->get_setting(WP_CDNJS_OPTIONS, 'settings', 'enable_scripts');
 
@@ -438,7 +578,15 @@ if(!class_exists('WP_CDNJS')) : /**
 		}
 	}
 }
-
 endif;
 
 $wp_cdnjs = new wp_cdnjs();
+/*
+$my_scripts = $wp_cdnjs->lookup_cdnjs_library('django.js');
+
+if(!$wp_cdnjs->is_script_registered('django.js')) {
+	if($my_scripts) {
+		$wp_cdnjs->register_script($my_scripts);
+	}
+}
+*/

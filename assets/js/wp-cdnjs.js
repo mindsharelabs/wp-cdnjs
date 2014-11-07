@@ -183,11 +183,7 @@ function onAssetChange() {
 
 function getFileExtension(filename) {
 	//console.dir(filename);
-	if(filename.split('.').pop() == 'css' || filename.split('.').pop() == 'js') {
-		return true;
-	} else {
-		return false;
-	}
+	return !!(filename.split('.').pop() == 'css' || filename.split('.').pop() == 'js');
 }
 
 function cleanName(str) {
@@ -208,9 +204,9 @@ function addLibraryRow(data, location) {
 	var default_asset = data.filename;
 	var nameID = cleanName(data.name);
 
-	// check to see if the default asset in minified, if not check to see if a min exists
+	// check to see if the default asset is minified, if not check to see if a min exists
 	if(default_asset.indexOf('.min.') == -1) {
-		for(i = 0; i < assets.length; i++) {
+		for(var i = 0; i < assets.length; i++) {
 			// if min version exists make it the default
 			//console.log(assets[i]);
 			var tmp = assets[i].name;
