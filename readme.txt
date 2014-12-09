@@ -2,9 +2,9 @@
 Contributors: mindshare, geetjacobs, patkirts
 Donate link: http://mind.sh/are/donate/
 Tags: cdnjs, cloudflare, js, css, scripts, cdn, libraries
-Requires at least: 3.8
-Tested up to: 4.0
-Stable tag: 0.1.3
+Requires at least: 4.0
+Tested up to: 4.0.1
+Stable tag: 0.1.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -59,9 +59,12 @@ function my_cdnjs_allow_in_admin() {
 
 == Changelog ==
 
+= 0.1.4 =
+* Cleanup code in /views/wp-cdnjs-settings.php
+* Cleanup fn for lookup_cdnjs_library()
+
 = 0.1.3 =
-* Update for 4.0
-*
+* Update for WP 4.0
 
 
 = 0.1.2 =

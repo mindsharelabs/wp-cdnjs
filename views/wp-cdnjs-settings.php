@@ -7,25 +7,25 @@ function wp_cdnjs_settings($settings) {
 
 	// General Settings section
 	$settings[] = array(
-		'section_id'          => 'settings',
-		'section_title'       => __('Settings', 'wp-cdnjs'),
+		'section_id' => 'settings',
+		'section_title' => __('Settings', 'wp-cdnjs'),
 		'section_description' => '',
 		//'section_order'       => 5,
-		'fields'              => array(
+		'fields' => array(
 			array(
-				'id'          => 'enable_scripts',
-				'title'       => __('Enable scripts', 'wp-cdnjs'),
-				'desc'        => __('Enqueue scripts for output on your site', 'wp-cdnjs'),
+				'id' => 'enable_scripts',
+				'title' => __('Enable scripts', 'wp-cdnjs'),
+				'desc' => __('Enqueue scripts for output on your site', 'wp-cdnjs'),
 				'placeholder' => '',
-				'type'        => 'checkbox',
-				'std'         => 0
+				'type' => 'checkbox',
+				'std' => 0
 			),
 			array(
-				'id'    => 'scripts',
+				'id' => 'scripts',
 				'title' => __('Find cdnjs Libraries', 'wp-cdnjs'),
-				'desc'  => __('Search for CSS and JavaScript libraries to include.', 'wp-cdnjs'),
-				'std'   => '',
-				'type'  => 'cdnjs',
+				'desc' => __('Search for CSS and JavaScript libraries to include.', 'wp-cdnjs'),
+				'std' => '',
+				'type' => 'cdnjs',
 			),
 
 		)
@@ -67,14 +67,14 @@ function cdn_field() {
 				</td>
 				<td class="wp-cdnjs_assets">
 					<?php $setasset = array_shift($value['assets']); ?>
-					<div id="<?php echo strtolower(preg_replace('/[^A-Za-z0-9\-]/', '-', $setasset)) ?>-asset-holder" class="inluded_assets">
+					<div id="<?php echo sanitize_title($setasset) ?>-asset-holder" class="inluded_assets">
 						<div><strong><?php _e('Included Assets', 'wp-cdnjs') ?>:</strong></div>
-						<div id="<?php echo strtolower(preg_replace('/[^A-Za-z0-9\-]/', '-', $setasset)) ?>-asset-row">
-							<?php echo $setasset.' *'; ?>
+						<div id="<?php echo sanitize_title($setasset) ?>-asset-row">
+							<?php echo $setasset . ' *'; ?>
 							<input type="hidden" name="cdnjs[cdnjs_settings_scripts][<?php echo $key; ?>][assets][]" value="<?php echo $setasset; ?>">
 						</div>
 						<?php foreach($value['assets'] as $asset) : ?>
-							<?php $cleanName = preg_replace('/[^A-Za-z0-9\-]/', '-', $asset); ?>
+							<?php $cleanName = sanitize_title($asset); ?>
 							<div id="<?php echo $cleanName; ?>-asset-row">&bull; <?php echo $asset; ?>
 								<i title="Remove" style="cursor:pointer" class="fa fa-times" onclick="removeRow('#<?php echo $cleanName; ?>-asset-row');"></i>
 								<input type="hidden" name="cdnjs[cdnjs_settings_scripts][<?php echo $key; ?>][assets][]" value="<?php echo $asset; ?>">
@@ -83,7 +83,7 @@ function cdn_field() {
 					</div>
 				</td>
 				<td class="wp-cdnjs_version">
-					<input type="hidden" id="<?php echo $key; ?>" data-plugin-name="<?php echo $value['name']; ?>" data-asset-id="<?php echo strtolower(preg_replace('/[^A-Za-z0-9\-]/', '-', $setasset)); ?>" data-asset-file="<?php echo $setasset; ?>" class="select2-assets">
+					<input type="hidden" id="<?php echo $key; ?>" data-plugin-name="<?php echo $value['name']; ?>" data-asset-id="<?php echo sanitize_title($setasset); ?>" data-asset-file="<?php echo $setasset; ?>" class="select2-assets">
 				</td>
 				<td class="wp-cdnjs_location">
 					<select name="cdnjs[cdnjs_settings_scripts][<?php echo $key; ?>][location]">
